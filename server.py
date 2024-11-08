@@ -25,8 +25,6 @@ class LogHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(result.stdout.encode("utf-8"))
             else:
-                print("stdout: "+ result.stdout)
-                print("stderr: "+result.stderr)
                 raise subprocess.CalledProcessError(result.returncode, command, stderr=result.stderr)
 
         except Exception as e:
