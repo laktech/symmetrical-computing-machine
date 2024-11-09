@@ -7,15 +7,15 @@ class LogHandler(BaseHTTPRequestHandler):
         url = urlparse(self.path)
         query_params = parse_qs(url.query)
 
-        file = query_params.get("file", [""])[0]
-        limit = query_params.get("limit", [""])[0]
-        grep = query_params.get("keyword", [""])[0]
-        grep_filter = "" if grep == "" else f"| grep {grep}"
-        limit_filter = "" if limit == "" else f"| head -n {limit}"
-        command = f"set -o pipefail; tail -r /var/log/{file} {grep_filter} {limit_filter}"
+        file = (query_params.get("file", [""])[0]).replace("'", "\\'")
+        limit = (query_params.get("limit", [""])[0]).replace("'", "\\'")
+        grep = (query_params.get("keyword", [""])[0]).replace("'", "\\'")
+        grep_filter = "" if grep == "" else f"| (grep $'{grep}' || [ $? -eq 1 ])"
+        limit_filter = "" if limit == "" else f"| head -n $'{limit}'"
+        command = f"set -o pipefail; tail -r $'/var/log/{file}' {grep_filter} {limit_filter}"
 
         try:
-            result = subprocess.run(command, shell=True, capture_output=True, text=True)
+            result = subprocess.run(command, shell=True, capture_output=True, text=True, executable="/bin/bash")
 
             exit_code = result.returncode
             
