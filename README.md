@@ -7,9 +7,10 @@ This is a simple Python program designed to return the contents of a log file fr
 ## How to Invoke the Program
 
 ### Prerequisites
-- Python 3.7 or later.
-- Shell tools, `tail`, `grep`, and `head` available in the system's PATH.
-- Bash
+- Python 3.11.10 or later.
+- Shell tools, `tail -r` suppor tor `tac`, `grep`, and `head` available in the system's PATH.
+- Bash found at /bin/bash
+- Tested on Ubuntu and FreeBSD
 
 ### Installation
 1. Clone this repository:
@@ -68,6 +69,8 @@ The following are limitations:
 - performance may be an issue, e.g. if lots of users access the endpoint
 - output is text with http status code for error reporting instead of JSON
 - large files are problematic as the entire file is read into memory
+
+On Linux, "tac" command is used. On Unix "tail -r" to read lines in reverse.
 
 ## Testing
 

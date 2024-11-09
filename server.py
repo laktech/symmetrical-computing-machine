@@ -1,3 +1,4 @@
+import shutil
 import subprocess
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse, parse_qs
@@ -17,9 +18,10 @@ class LogHandler(BaseHTTPRequestHandler):
         file = (query_params.get("file", [""])[0]).replace("'", "\\'")
         limit = (query_params.get("limit", [""])[0]).replace("'", "\\'")
         grep = (query_params.get("keyword", [""])[0]).replace("'", "\\'")
-        grep_filter = "" if grep == "" else f"| (grep $'{grep}' || true)"
+        tail_cmd = "tac" if shutil.which("tac") is not None else "tail -r"
+        grep_filter = "" if grep == "" else f"| (grep -a $'{grep}' || true)"
         limit_filter = "" if limit == "" else f"| head -n $'{limit}'"
-        command = f"set -o pipefail; tail -r $'/var/log/{file}' {grep_filter} {limit_filter}"
+        command = f"set -o pipefail; {tail_cmd} $'/var/log/{file}' {grep_filter} {limit_filter}"
 
         # require file query param
         if file == "":
@@ -27,7 +29,7 @@ class LogHandler(BaseHTTPRequestHandler):
             return
 
         try:
-            result = subprocess.run(command, shell=True, capture_output=True, text=True)
+            result = subprocess.run(command, shell=True, capture_output=True, text=True, executable="/bin/bash")
 
             # exit code 141 is treated as success. it indicates termination by SIGPIPE, which occurs when output
             # is truncated by head(1)
