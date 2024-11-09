@@ -27,7 +27,7 @@ class LogHandler(BaseHTTPRequestHandler):
             return
 
         try:
-            result = subprocess.run(command, shell=True, capture_output=True, text=True, executable="/bin/bash")
+            result = subprocess.run(command, shell=True, capture_output=True, text=True)
 
             # exit code 141 is treated as success. it indicates termination by SIGPIPE, which occurs when output
             # is truncated by head(1)
