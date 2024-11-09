@@ -10,7 +10,7 @@ This is a simple Python program designed to return the contents of a log file fr
 - Python 3.11.10 or later.
 - Shell tools, `tail -r` suppor tor `tac`, `grep`, and `head` available in the system's PATH.
 - Bash found at /bin/bash
-- Tested on Ubuntu and FreeBSD
+- Tested on Mac, Ubuntu, and FreeBSD
 
 ### Installation
 1. Clone this repository:
